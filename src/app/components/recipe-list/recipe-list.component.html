@@ -1,0 +1,33 @@
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col" *ngFor="let recipe of recipes">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ recipe.title }}</h5>
+                <p class="card-text"><strong>Comensales:</strong> {{ recipe.numberDiner }}</p>
+                <ul class="list-unstyled small">
+                    <li><strong>Calorías:</strong> {{ recipe.nutritional.calories }}</li>
+                    <li><strong>Grasas saturadas:</strong> {{ recipe.nutritional.saturatedFat }}</li>
+                    <li><strong>Otras grasas:</strong> {{ recipe.nutritional.otherFat }}</li>
+                    <li><strong>Hidratos:</strong> {{ recipe.nutritional.carbs }}</li>
+                    <li><strong>Proteínas:</strong> {{ recipe.nutritional.protein }}</li>
+                    <li><strong>Fibra:</strong> {{ recipe.nutritional.fiber }}</li>
+                    <li><strong>Sal:</strong> {{ recipe.nutritional.salt }}</li>
+                </ul>
+                <div class="rating mt-2">
+                    <ng-container *ngIf="recipe.ratings.length > 0; else sinVotos">
+                        <ng-container *ngFor="let star of [1,2,3,4,5]">
+                            <i class="bi" [ngClass]="{
+                  'bi-star-fill': star <= getAverageRating(recipe),
+                  'bi-star': star > getAverageRating(recipe)
+                }"></i>
+                        </ng-container>
+                        <small class="text-muted ms-2">({{ recipe.ratings.length }} votos)</small>
+                    </ng-container>
+                    <ng-template #sinVotos>
+                        <small class="text-muted">Sin votos aún</small>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
