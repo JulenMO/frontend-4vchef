@@ -1,18 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { RecipeService } from './services/recipe.service';
-import { Recipe } from './models/recipe.model';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
-  template: `<p>Ver consola</p>`,
+  standalone: true,
+  imports: [RouterOutlet, HeaderComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  constructor(private recipeService: RecipeService) { }
-
-  ngOnInit(): void {
-    this.recipeService.getAll().subscribe({
-      next: (recipes: Recipe[]) => console.log('Recetas:', recipes),
-      error: (err) => console.error('Error:', err)
-    });
-  }
-}
+export class AppComponent { }
