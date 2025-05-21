@@ -1,5 +1,32 @@
+<!-- Filtros -->
+<div class="mb-4 p-3 border rounded bg-light">
+    <h5>Filtros</h5>
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label for="minCalories" class="form-label">Calorías mínimas</label>
+            <input id="minCalories" type="number" class="form-control" [(ngModel)]="minCalories"
+                (input)="applyFilters()">
+        </div>
+        <div class="col-md-3">
+            <label for="maxCalories" class="form-label">Calorías máximas</label>
+            <input id="maxCalories" type="number" class="form-control" [(ngModel)]="maxCalories"
+                (input)="applyFilters()">
+        </div>
+        <div class="col-md-3">
+            <label for="minRating" class="form-label">Valoración mínima (estrellas)</label>
+            <select id="minRating" class="form-select" [(ngModel)]="minRating" (change)="applyFilters()">
+                <option [ngValue]="null">Cualquiera</option>
+                <option *ngFor="let star of [1,2,3,4,5]" [value]="star">
+                    {{ star }} estrella{{ star > 1 ? 's' : '' }}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de recetas -->
 <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col" *ngFor="let recipe of recipes">
+    <div class="col" *ngFor="let recipe of filteredRecipes">
         <div class="card h-100 shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">{{ recipe.title }}</h5>
