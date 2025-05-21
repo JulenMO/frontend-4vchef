@@ -3,18 +3,16 @@
     <h5>Filtros</h5>
     <div class="row g-3">
         <div class="col-md-3">
-            <label for="minCalories" class="form-label">Calorías mínimas</label>
-            <input id="minCalories" type="number" class="form-control" [(ngModel)]="minCalories"
-                (input)="applyFilters()">
+            <label class="form-label">Calorías mínimas</label>
+            <input type="number" class="form-control" [(ngModel)]="minCalories" (input)="applyFilters()">
         </div>
         <div class="col-md-3">
-            <label for="maxCalories" class="form-label">Calorías máximas</label>
-            <input id="maxCalories" type="number" class="form-control" [(ngModel)]="maxCalories"
-                (input)="applyFilters()">
+            <label class="form-label">Calorías máximas</label>
+            <input type="number" class="form-control" [(ngModel)]="maxCalories" (input)="applyFilters()">
         </div>
         <div class="col-md-3">
-            <label for="minRating" class="form-label">Valoración mínima (estrellas)</label>
-            <select id="minRating" class="form-select" [(ngModel)]="minRating" (change)="applyFilters()">
+            <label class="form-label">Valoración mínima</label>
+            <select class="form-select" [(ngModel)]="minRating" (change)="applyFilters()">
                 <option [ngValue]="null">Cualquiera</option>
                 <option *ngFor="let star of [1,2,3,4,5]" [value]="star">
                     {{ star }} estrella{{ star > 1 ? 's' : '' }}
@@ -24,10 +22,10 @@
     </div>
 </div>
 
-<!-- Lista de recetas -->
+<!-- Lista de Recetas -->
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col" *ngFor="let recipe of filteredRecipes">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm" (click)="openDetail(recipe)" style="cursor: pointer;">
             <div class="card-body">
                 <h5 class="card-title">{{ recipe.title }}</h5>
                 <p class="card-text"><strong>Comensales:</strong> {{ recipe.numberDiner }}</p>
@@ -54,6 +52,72 @@
                         <small class="text-muted">Sin votos aún</small>
                     </ng-template>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalle -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="selectedRecipe" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ selectedRecipe.title }} ({{ selectedRecipe.numberDiner }} comensales)</h5>
+                <button type="button" class="btn-close" aria-label="Cerrar" (click)="closeDetail()"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Ingredientes</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Ingrediente</th>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let ing of selectedRecipe.ingredients">
+                            <td>{{ ing.name }}</td>
+                            <td>{{ ing.quantity }}</td>
+                            <td>{{ ing.unit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6>Pasos</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let step of selectedRecipe.steps">
+                            <td>{{ step.order }}</td>
+                            <td>{{ step.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6>Valores nutricionales</h6>
+                <ul class="list-unstyled">
+                    <li><strong>Calorías:</strong> {{ selectedRecipe.nutritional.calories }}</li>
+                    <li><strong>Grasas saturadas:</strong> {{ selectedRecipe.nutritional.saturatedFat }}</li>
+                    <li><strong>Otras grasas:</strong> {{ selectedRecipe.nutritional.otherFat }}</li>
+                    <li><strong>Hidratos:</strong> {{ selectedRecipe.nutritional.carbs }}</li>
+                    <li><strong>Proteínas:</strong> {{ selectedRecipe.nutritional.protein }}</li>
+                    <li><strong>Fibra:</strong> {{ selectedRecipe.nutritional.fiber }}</li>
+                    <li><strong>Sal:</strong> {{ selectedRecipe.nutritional.salt }}</li>
+                </ul>
+
+                <h6>Valoración media</h6>
+                <p>
+                    {{ getAverageRating(selectedRecipe) }} estrellas ({{ selectedRecipe.ratings.length }} votos)
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="closeDetail()">Cerrar</button>
             </div>
         </div>
     </div>
