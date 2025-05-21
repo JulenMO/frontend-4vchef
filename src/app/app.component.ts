@@ -1,13 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./components/header/header.component";
+import { Component, OnInit } from '@angular/core';
+import { RecipeService } from './services/recipe.service';
+import { Recipe } from './models/recipe.model';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  template: `<p>Ver consola</p>`,
 })
-export class AppComponent {
-  title = 'frontend-4vchef';
+export class AppComponent implements OnInit {
+  constructor(private recipeService: RecipeService) { }
+
+  ngOnInit(): void {
+    this.recipeService.getAll().subscribe({
+      next: (recipes: Recipe[]) => console.log('Recetas:', recipes),
+      error: (err) => console.error('Error:', err)
+    });
+  }
 }
