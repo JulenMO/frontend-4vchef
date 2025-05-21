@@ -135,4 +135,17 @@ export class RecipeListComponent implements OnInit {
       }
     });
   }
+
+  vote(recipe: Recipe, value: number): void {
+    this.recipeService.rateRecipe(recipe.id, value).subscribe({
+      next: () => {
+        recipe.ratings.push({ id: 0, value });
+        this.applyFilters();
+      },
+      error: (err) => {
+        console.error('Error al votar receta:', err);
+        alert('Error al votar receta.');
+      }
+    });
+  }
 }
