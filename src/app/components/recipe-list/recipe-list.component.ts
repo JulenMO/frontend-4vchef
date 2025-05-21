@@ -20,6 +20,24 @@ export class RecipeListComponent implements OnInit {
   minRating: number | null = null;
 
   selectedRecipe: Recipe | null = null;
+  showCreateForm: boolean = false;
+
+  newRecipe: any = {
+    title: '',
+    numberDiner: 1,
+    ingredients: [{ name: '', quantity: 0, unit: '' }],
+    steps: [{ description: '', order: 1 }],
+    nutritional: {
+      calories: 0,
+      saturatedFat: 0,
+      otherFat: 0,
+      carbs: 0,
+      protein: 0,
+      fiber: 0,
+      salt: 0
+    },
+    ratings: []
+  };
 
   constructor(private recipeService: RecipeService) { }
 
@@ -61,5 +79,60 @@ export class RecipeListComponent implements OnInit {
 
   closeDetail(): void {
     this.selectedRecipe = null;
+  }
+
+  openCreateForm(): void {
+    this.resetNewRecipe();
+    this.showCreateForm = true;
+  }
+
+  closeCreateForm(): void {
+    this.showCreateForm = false;
+  }
+
+  addIngredient(): void {
+    this.newRecipe.ingredients.push({ name: '', quantity: 0, unit: '' });
+  }
+
+  addStep(): void {
+    this.newRecipe.steps.push({ description: '', order: this.newRecipe.steps.length + 1 });
+  }
+
+  resetNewRecipe(): void {
+    this.newRecipe = {
+      title: '',
+      numberDiner: 1,
+      ingredients: [{ name: '', quantity: 0, unit: '' }],
+      steps: [{ description: '', order: 1 }],
+      nutritional: {
+        calories: 0,
+        saturatedFat: 0,
+        otherFat: 0,
+        carbs: 0,
+        protein: 0,
+        fiber: 0,
+        salt: 0
+      },
+      ratings: []
+    };
+  }
+
+  saveRecipe(): void {
+    if (this.newRecipe.ingredients.length < 1 || this.newRecipe.steps.length < 1) {
+      alert('Debes tener al menos 1 ingrediente y 1 paso.');
+      return;
+    }
+
+    this.recipeService.create(this.newRecipe).subscribe({
+      next: (created) => {
+        this.recipes.push(created);
+        this.applyFilters();
+        this.closeCreateForm();
+      },
+      error: (err) => {
+        console.error('Error al guardar receta:', err);
+        alert('Error al guardar receta.');
+      }
+    });
   }
 }

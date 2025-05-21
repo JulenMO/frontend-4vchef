@@ -1,4 +1,9 @@
-<!-- Filtros -->
+<div class="mb-3 text-end">
+    <button class="btn btn-success" (click)="openCreateForm()">
+        + Nueva receta
+    </button>
+</div>
+
 <div class="mb-4 p-3 border rounded bg-light">
     <h5>Filtros</h5>
     <div class="row g-3">
@@ -22,7 +27,6 @@
     </div>
 </div>
 
-<!-- Lista de Recetas -->
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col" *ngFor="let recipe of filteredRecipes">
         <div class="card h-100 shadow-sm" (click)="openDetail(recipe)" style="cursor: pointer;">
@@ -57,67 +61,61 @@
     </div>
 </div>
 
-<!-- Modal de Detalle -->
-<div class="modal fade show d-block" tabindex="-1" *ngIf="selectedRecipe" style="background-color: rgba(0, 0, 0, 0.5);">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal fade show d-block" *ngIf="showCreateForm" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ selectedRecipe.title }} ({{ selectedRecipe.numberDiner }} comensales)</h5>
-                <button type="button" class="btn-close" aria-label="Cerrar" (click)="closeDetail()"></button>
+                <h5 class="modal-title">Nueva receta</h5>
+                <button class="btn-close" (click)="closeCreateForm()"></button>
             </div>
             <div class="modal-body">
-                <h6>Ingredientes</h6>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Ingrediente</th>
-                            <th>Cantidad</th>
-                            <th>Unidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let ing of selectedRecipe.ingredients">
-                            <td>{{ ing.name }}</td>
-                            <td>{{ ing.quantity }}</td>
-                            <td>{{ ing.unit }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <form (ngSubmit)="saveRecipe()">
+                    <div class="mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" [(ngModel)]="newRecipe.title" name="title" required>
+                    </div>
 
-                <h6>Pasos</h6>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Descripción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let step of selectedRecipe.steps">
-                            <td>{{ step.order }}</td>
-                            <td>{{ step.description }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div class="mb-3">
+                        <label class="form-label">Comensales</label>
+                        <input type="number" class="form-control" [(ngModel)]="newRecipe.numberDiner" name="numberDiner"
+                            required>
+                    </div>
 
-                <h6>Valores nutricionales</h6>
-                <ul class="list-unstyled">
-                    <li><strong>Calorías:</strong> {{ selectedRecipe.nutritional.calories }}</li>
-                    <li><strong>Grasas saturadas:</strong> {{ selectedRecipe.nutritional.saturatedFat }}</li>
-                    <li><strong>Otras grasas:</strong> {{ selectedRecipe.nutritional.otherFat }}</li>
-                    <li><strong>Hidratos:</strong> {{ selectedRecipe.nutritional.carbs }}</li>
-                    <li><strong>Proteínas:</strong> {{ selectedRecipe.nutritional.protein }}</li>
-                    <li><strong>Fibra:</strong> {{ selectedRecipe.nutritional.fiber }}</li>
-                    <li><strong>Sal:</strong> {{ selectedRecipe.nutritional.salt }}</li>
-                </ul>
+                    <h6>Ingredientes</h6>
+                    <div *ngFor="let ing of newRecipe.ingredients; let i = index" class="row g-2 mb-2">
+                        <div class="col">
+                            <input class="form-control" [(ngModel)]="ing.name" name="ingName{{i}}" required>
+                        </div>
+                        <div class="col">
+                            <input type="number" class="form-control" [(ngModel)]="ing.quantity" name="ingQty{{i}}"
+                                required>
+                        </div>
+                        <div class="col">
+                            <input class="form-control" [(ngModel)]="ing.unit" name="ingUnit{{i}}" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="addIngredient()">+
+                        Ingrediente</button>
 
-                <h6>Valoración media</h6>
-                <p>
-                    {{ getAverageRating(selectedRecipe) }} estrellas ({{ selectedRecipe.ratings.length }} votos)
-                </p>
+                    <h6 class="mt-4">Pasos</h6>
+                    <div *ngFor="let step of newRecipe.steps; let i = index" class="mb-2">
+                        <input class="form-control" [(ngModel)]="step.description" name="stepDesc{{i}}" required>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="addStep()">+ Paso</button>
+
+                    <h6 class="mt-4">Valores nutricionales</h6>
+                    <div class="row g-2">
+                        <div class="col"
+                            *ngFor="let field of ['calories','saturatedFat','otherFat','carbs','protein','fiber','salt']">
+                            <input type="number" class="form-control" [(ngModel)]="newRecipe.nutritional[field]"
+                                [name]="field" required>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" (click)="closeDetail()">Cerrar</button>
+                <button class="btn btn-secondary" (click)="closeCreateForm()">Cancelar</button>
+                <button class="btn btn-primary" (click)="saveRecipe()">Guardar receta</button>
             </div>
         </div>
     </div>
