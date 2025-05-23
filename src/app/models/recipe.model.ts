@@ -1,6 +1,6 @@
 import { Ingredient } from './ingredient.model';
 import { Step } from './step.model';
-import { NutritionalValue } from './nutritional-value.model';
+import { Nutrient } from './nutrient.model';
 import { Rating } from './rating.model';
 
 export interface Recipe {
@@ -9,6 +9,6 @@ export interface Recipe {
     numberDiner: number;
     ingredients: Ingredient[];
     steps: Step[];
-    nutritional: NutritionalValue;
+    nutrients: Nutrient[];
     ratings: Rating[];
 }
