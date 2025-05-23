@@ -5,11 +5,12 @@ import { RecipeService } from '../../services/recipe.service';
 
 @Component({
   selector: 'app-recipe-list',
-  templateUrl: './recipe-list.component.html',
-  imports: [CommonModule]
+  imports: [CommonModule],
+  templateUrl: './recipe-list.component.html'
 })
 export class RecipeListComponent implements OnInit {
   recipes: Recipe[] = [];
+  selectedRecipe: Recipe | null = null;
 
   constructor(private recipeService: RecipeService) { }
 
@@ -18,6 +19,12 @@ export class RecipeListComponent implements OnInit {
       next: (data) => this.recipes = data,
       error: (err) => console.error('Error al cargar recetas', err)
     });
+  }
+
+  openModal(recipe: Recipe): void {
+    this.selectedRecipe = recipe;
+    const modal = new (window as any).bootstrap.Modal('#recipeModal');
+    modal.show();
   }
 
   getAverageRating(recipe: Recipe): number {
@@ -30,7 +37,10 @@ export class RecipeListComponent implements OnInit {
     this.recipeService.rate(recipeId, value).subscribe({
       next: (updatedRecipe) => {
         const index = this.recipes.findIndex(r => r.id === recipeId);
-        if (index !== -1) this.recipes[index] = updatedRecipe;
+        if (index !== -1) {
+          this.recipes[index] = updatedRecipe;
+          this.selectedRecipe = updatedRecipe;
+        }
       },
       error: (err) => console.error('Error al valorar receta', err)
     });
