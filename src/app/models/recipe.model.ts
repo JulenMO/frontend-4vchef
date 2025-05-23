@@ -1,7 +1,7 @@
 import { Ingredient } from './ingredient.model';
 import { Step } from './step.model';
-import { Nutrient } from './nutrient.model';
 import { Rating } from './rating.model';
+import { Nutrient } from './nutrient.model';
 
 export interface Recipe {
     id: number;
