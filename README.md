@@ -18,7 +18,7 @@ Permite visualizar, puntuar y crear recetas conectándose a la API Symfony del b
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/usuario/4vchef-frontend.git
+git clone https://github.com/JulenMO/frontend-4vchef.git
 cd 4vchef-frontend
 
 # Instalar dependencias
