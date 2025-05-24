@@ -1,59 +1,62 @@
-# Frontend4vchef
+# 4VChef — Aplicación Frontend en Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
+Este proyecto es el **frontend oficial** de 4VChef, desarrollado en **Angular** con estilos en **Bootstrap**.  
+Permite visualizar, puntuar y crear recetas conectándose a la API Symfony del backend.
 
-## Development server
+---
 
-To start a local development server, run:
+## ⚙️ Requisitos
 
-```bash
-ng serve
-```
+- Node.js  
+- Bun (gestor de paquetes)  
+- Angular CLI
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🚀 Instalación y puesta en marcha
 
 ```bash
-ng generate --help
+# Clonar el repositorio
+git clone https://github.com/usuario/4vchef-frontend.git
+cd 4vchef-frontend
+
+# Instalar dependencias
+bun install
+
+# Iniciar servidor de desarrollo
+bunx ng serve
 ```
 
-## Building
+> Una vez iniciado, entra en:  
+> `http://localhost:4200`
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🔄 Conexión con el backend
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Este frontend requiere que el backend Symfony esté activo en:  
+`http://localhost:8000`
 
-## Running unit tests
+> Asegúrate de tener ejecutado el servidor con:
+> ```bash
+> symfony serve
+> ```
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## ⚠️ Observación técnica
 
-## Running end-to-end tests
+En algunos entornos de desarrollo, la primera vez que se accede a la página las recetas pueden no mostrarse correctamente.  
+Esto se resuelve automáticamente al **refrescar la página** o navegar entre pestañas.
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## ✅ Funcionalidades
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- Listado completo de recetas
+- Filtros por calorías y valoración media
+- Creación de recetas con formulario
+- Modal detallado con ingredientes, pasos y nutrientes
+- Valoración mediante estrellas
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
