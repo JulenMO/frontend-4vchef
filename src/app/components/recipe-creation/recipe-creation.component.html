@@ -1,4 +1,81 @@
 <div class="container py-4">
-    <h2 class="mb-4">Formulario para crear receta</h2>
-    <p>Aquí irá el formulario completo 😎</p>
+    <h2 class="mb-4">Crear nueva receta</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="mb-3">
+            <label class="form-label">Nombre de la receta</label>
+            <input class="form-control" formControlName="title" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Número de comensales</label>
+            <input type="number" class="form-control" formControlName="numberDiner" required min="1" />
+        </div>
+
+        <hr class="my-4">
+        <h4>Ingredientes</h4>
+        <div formArrayName="ingredients">
+            <div class="row g-2 mb-3" *ngFor="let ing of ingredients.controls; let i = index" [formGroupName]="i">
+                <div class="col-md-5">
+                    <input class="form-control" formControlName="name" placeholder="Nombre del ingrediente" />
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" type="number" min="0.01" step="any" formControlName="quantity"
+                        placeholder="Cantidad" />
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" formControlName="unit" placeholder="Unidad (g, ml, uds...)" />
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger" (click)="removeIngredient(i)">×</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-primary mb-3" (click)="addIngredient()">
+            Añadir ingrediente
+        </button>
+
+        <hr class="my-4">
+        <h4>Pasos</h4>
+        <div formArrayName="steps">
+            <div class="row g-2 mb-3" *ngFor="let step of steps.controls; let i = index" [formGroupName]="i">
+                <div class="col-md-11">
+                    <input class="form-control" formControlName="description"
+                        placeholder="Descripción del paso {{ i + 1 }}" />
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger" (click)="removeStep(i)">×</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-primary mb-3" (click)="addStep()">
+            Añadir paso
+        </button>
+
+        <hr class="my-4">
+        <h4>Nutrientes</h4>
+        <div formArrayName="nutrients">
+            <div class="row g-2 mb-3" *ngFor="let n of nutrients.controls; let i = index" [formGroupName]="i">
+                <div class="col-md-6">
+                    <input class="form-control" formControlName="name"
+                        placeholder="Tipo de nutriente (Calorías, Proteínas...)" />
+                </div>
+                <div class="col-md-5">
+                    <input class="form-control" type="number" min="0" formControlName="amount" placeholder="Cantidad" />
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger" (click)="removeNutrient(i)">×</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-primary mb-3" (click)="addNutrient()">
+            Añadir nutriente
+        </button>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success" [disabled]="form.invalid">
+                Guardar receta
+            </button>
+        </div>
+    </form>
 </div>
