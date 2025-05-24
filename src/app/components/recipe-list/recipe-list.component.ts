@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Recipe } from '../../models/recipe.model';
 import { RecipeService } from '../../services/recipe.service';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-recipe-list',
@@ -14,11 +16,18 @@ export class RecipeListComponent implements OnInit {
   recipes: Recipe[] = [];
   filteredRecipes: Recipe[] = [];
   selectedRecipe: Recipe | null = null;
+  recipeToVote: Recipe | null = null;
 
   minCalories: number | null = null;
   maxCalories: number | null = null;
   minRating: number | null = null;
   maxRating: number | null = null;
+
+  @ViewChild('recipeModal') recipeModalRef!: ElementRef;
+  @ViewChild('voteModal') voteModalRef!: ElementRef;
+
+  recipeModal: any;
+  voteModal: any;
 
   constructor(private recipeService: RecipeService) { }
 
@@ -30,6 +39,11 @@ export class RecipeListComponent implements OnInit {
       },
       error: (err) => console.error('Error al cargar recetas', err)
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.recipeModal = new bootstrap.Modal(this.recipeModalRef.nativeElement);
+    this.voteModal = new bootstrap.Modal(this.voteModalRef.nativeElement);
   }
 
   getAverageRating(recipe: Recipe): number {
@@ -67,21 +81,35 @@ export class RecipeListComponent implements OnInit {
 
   openModal(recipe: Recipe): void {
     this.selectedRecipe = recipe;
-    const modal = new (window as any).bootstrap.Modal('#recipeModal');
-    modal.show();
+    this.recipeModal.show();
   }
 
-  rateRecipe(recipeId: number, value: number): void {
+  openVoteModal(recipe: Recipe): void {
+    this.recipeToVote = recipe;
+    this.voteModal.show();
+  }
+
+  alreadyVoted(recipeId: number): boolean {
+    return localStorage.getItem(`voted-${recipeId}`) === 'true';
+  }
+
+  vote(recipeId: number, value: number): void {
+    if (this.alreadyVoted(recipeId)) return;
+
     this.recipeService.rate(recipeId, value).subscribe({
       next: (updatedRecipe) => {
+        localStorage.setItem(`voted-${recipeId}`, 'true');
+
         const index = this.recipes.findIndex(r => r.id === recipeId);
         if (index !== -1) {
           this.recipes[index] = updatedRecipe;
           this.applyFilters();
-          if (this.selectedRecipe && this.selectedRecipe.id === recipeId) {
+          if (this.selectedRecipe?.id === recipeId) {
             this.selectedRecipe = updatedRecipe;
           }
         }
+
+        this.voteModal.hide();
       },
       error: (err) => console.error('Error al valorar receta', err)
     });
