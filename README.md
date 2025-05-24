@@ -8,8 +8,9 @@ Permite visualizar, puntuar y crear recetas conectándose a la API Symfony del b
 ## ⚙️ Requisitos
 
 - Node.js  
-- Bun (gestor de paquetes)  
+- Bun (o cualquier gestor de paquetes similar)  
 - Angular CLI
+- Backend (proyecto e instrucciones en el otro repositorio)
 
 ---
 
@@ -24,7 +25,7 @@ cd 4vchef-frontend
 bun install
 
 # Iniciar servidor de desarrollo
-bunx ng serve
+ng serve
 ```
 
 > Una vez iniciado, entra en:  
@@ -46,8 +47,8 @@ Este frontend requiere que el backend Symfony esté activo en:
 
 ## ⚠️ Observación técnica
 
-En algunos entornos de desarrollo, la primera vez que se accede a la página las recetas pueden no mostrarse correctamente.  
-Esto se resuelve automáticamente al **refrescar la página** o navegar entre pestañas.
+En algunos casos, la primera vez que se accede a la página las recetas pueden no mostrarse correctamente.  
+Esto debería resolverse automáticamente al **refrescar la página** o navegar entre pestañas de la página.
 
 ---
 
