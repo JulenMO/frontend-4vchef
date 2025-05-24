@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { RecipeService } from '../../services/recipe.service';
 
 @Component({
   selector: 'app-recipe-creation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './recipe-creation.component.html'
 })
 export class RecipeCreationComponent {
@@ -34,6 +33,13 @@ export class RecipeCreationComponent {
 
   get nutrients(): FormArray {
     return this.form.get('nutrients') as FormArray;
+  }
+
+  get completeValidForm(): boolean {
+    return this.form.valid &&
+      this.ingredients.length > 0 &&
+      this.steps.length > 0 &&
+      this.nutrients.length > 0;
   }
 
   addIngredient(): void {
@@ -71,7 +77,8 @@ export class RecipeCreationComponent {
   }
 
   submit(): void {
-    if (this.form.invalid) return;
+    if (!this.completeValidForm) return;
+
     this.recipeService.create(this.form.value).subscribe({
       next: () => {
         alert('Receta creada con éxito');
