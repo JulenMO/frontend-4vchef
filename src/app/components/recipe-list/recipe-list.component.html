@@ -1,60 +1,85 @@
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    <div class="col" *ngFor="let recipe of recipes">
-        <div class="card h-100 shadow" (click)="openModal(recipe)" style="cursor: pointer">
-            <div class="card-body">
-                <h5 class="card-title">{{ recipe.title }}</h5>
-                <p class="card-text">Para {{ recipe.numberDiner }} comensales</p>
-                <p class="text-muted">Haz clic para ver más detalles</p>
+<div class="container py-4">
+    <div class="mb-4">
+        <h4>Filtrar recetas</h4>
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="number" class="form-control" [(ngModel)]="minCalories" placeholder="Calorías mínimas">
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control" [(ngModel)]="maxCalories" placeholder="Calorías máximas">
+            </div>
+            <div class="col-md-3">
+                <input type="number" step="0.1" class="form-control" [(ngModel)]="minRating"
+                    placeholder="Valoración mínima">
+            </div>
+            <div class="col-md-3">
+                <input type="number" step="0.1" class="form-control" [(ngModel)]="maxRating"
+                    placeholder="Valoración máxima">
+            </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+            <button class="btn btn-primary" (click)="applyFilters()">Aplicar filtros</button>
+            <button class="btn btn-secondary" (click)="resetFilters()">Reset</button>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col" *ngFor="let recipe of filteredRecipes">
+            <div class="card h-100 shadow" (click)="openModal(recipe)" style="cursor: pointer">
+                <div class="card-body">
+                    <h5 class="card-title">{{ recipe.title }}</h5>
+                    <p class="card-text">Para {{ recipe.numberDiner }} comensales</p>
+                    <p class="text-muted">Haz clic para ver más detalles</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- MODAL -->
-<div class="modal fade" id="recipeModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content" *ngIf="selectedRecipe">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ selectedRecipe.title }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Para:</strong> {{ selectedRecipe.numberDiner }} comensales</p>
+    <div class="modal fade" id="recipeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content" *ngIf="selectedRecipe">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ selectedRecipe.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Para:</strong> {{ selectedRecipe.numberDiner }} comensales</p>
 
-                <h6>Ingredientes</h6>
-                <ul>
-                    <li *ngFor="let ing of selectedRecipe.ingredients">
-                        {{ ing.quantity }} {{ ing.unit }} de {{ ing.name }}
-                    </li>
-                </ul>
+                    <h6>Ingredientes</h6>
+                    <ul>
+                        <li *ngFor="let ing of selectedRecipe.ingredients">
+                            {{ ing.quantity }} {{ ing.unit }} de {{ ing.name }}
+                        </li>
+                    </ul>
 
-                <h6>Paso a paso</h6>
-                <ol>
-                    <li *ngFor="let step of selectedRecipe.steps">
-                        {{ step.description }}
-                    </li>
-                </ol>
+                    <h6>Paso a paso</h6>
+                    <ol>
+                        <li *ngFor="let step of selectedRecipe.steps">
+                            {{ step.description }}
+                        </li>
+                    </ol>
 
-                <h6>Información nutricional</h6>
-                <ul>
-                    <li *ngFor="let n of selectedRecipe.nutrients">
-                        {{ n.name }}: {{ n.amount }}
-                    </li>
-                </ul>
+                    <h6>Información nutricional</h6>
+                    <ul>
+                        <li *ngFor="let n of selectedRecipe.nutrients">
+                            {{ n.name }}: {{ n.amount }}
+                        </li>
+                    </ul>
 
-                <h6>Puntúa esta receta</h6>
-                <p class="mb-1 small text-muted">Haz clic en una estrella para valorar</p>
-                <div class="d-flex align-items-center gap-1">
-                    <ng-container *ngFor="let star of [1,2,3,4,5]">
-                        <i class="bi" [ngClass]="{
-                  'bi-star-fill': star <= getAverageRating(selectedRecipe!),
-                  'bi-star': star > getAverageRating(selectedRecipe!)
-                }" role="button" (click)="rateRecipe(selectedRecipe!.id, star)">
-                        </i>
-                    </ng-container>
-                    <span class="ms-2">
-                        ({{ getAverageRating(selectedRecipe!) | number: '1.1-1' }})
-                    </span>
+                    <h6>Puntúa esta receta</h6>
+                    <p class="mb-1 small text-muted">Haz clic en una estrella para valorar</p>
+                    <div class="d-flex align-items-center gap-1">
+                        <ng-container *ngFor="let star of [1,2,3,4,5]">
+                            <i class="bi" [ngClass]="{
+                    'bi-star-fill': star <= getAverageRating(selectedRecipe!),
+                    'bi-star': star > getAverageRating(selectedRecipe!)
+                  }" role="button" (click)="rateRecipe(selectedRecipe!.id, star)">
+                            </i>
+                        </ng-container>
+                        <span class="ms-2">
+                            ({{ getAverageRating(selectedRecipe!) | number: '1.1-1' }})
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
